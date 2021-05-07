@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zking.killprovider.mapper.SwiperMapper" >
+  <!-- 通用查询映射结果 -->
+  <resultMap id="BaseResultMap" type="com.zking.killprovider.model.t_swiper">
+    <id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="goods_id" property="goodsId" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="open_type" property="openType" jdbcType="VARCHAR" javaType="java.lang.String" />
+    <result column="image_src" property="imageSrc" jdbcType="VARCHAR" javaType="java.lang.String"  />
+    <result column="navigator_url" property="navigatorUrl" jdbcType="VARCHAR" javaType="java.lang.String"  />
+    <!--        <result column="goods_id" property="goods_id" />-->
+    <!--        <result column="open_type" property="open_type" />-->
+    <!--        <result column="image_src" property="image_src" />-->
+    <!--        <result column="navigator_url" property="navigator_url" />-->
+  </resultMap>
+
+  <!-- 通用查询结果列 -->
+  <sql id="Base_Column_List">
+        id, goods_id, open_type, image_src, navigator_url
+    </sql>
+
+
+
+</mapper>

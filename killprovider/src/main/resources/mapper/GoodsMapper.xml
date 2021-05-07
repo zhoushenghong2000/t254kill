@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zking.killprovider.mapper.GoodsMapper" >
+  <resultMap id="BaseResultMap" type="com.zking.killprovider.model.Goods" >
+    <constructor >
+      <idArg column="gid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="gname" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="gprice" jdbcType="REAL" javaType="java.lang.Float" />
+      <arg column="gtype" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="gstatus" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="glib" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    </constructor>
+  </resultMap>
+  <resultMap id="dto" type="com.zking.killcommon.dto.GoodsDTO">
+    <id column="gid" property="gid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="gname" property="gname" jdbcType="VARCHAR" javaType="java.lang.String" />
+    <result column="gprice" property="gprice" jdbcType="REAL" javaType="java.lang.Float" />
+    <result column="gtype" property="gtype" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="gstatus" property="gstatus" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="glib" property="glib" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="tname" property="tname" jdbcType="VARCHAR" javaType="java.lang.String" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    gid, gname, gprice, gtype, gstatus, glib
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_goods
+    where gid = #{gid,jdbcType=INTEGER}
+  </select>
+
+    <select id="getAllGoods" resultMap="dto" >
+        SELECT a.gid,a.gname,a.gprice,a.gtype,a.gstatus,a.glib,b.tname
+        FROM t_goods a,t_goodstype b
+        where a.gtype=b.tid
+      <if test="gname!=null">
+        and a.gname like concat('%',#{gname},'%')
+      </if>
+      <if test="tname!=null">
+        and b.tname like concat('%',#{tname},'%')
+      </if>
+      <if test="gstatus!=null">
+        and a.gstatus=1
+      </if>
+      ORDER BY a.gid desc
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_goods
+    where gid = #{gid,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.zking.killcommon.dto.GoodsDTO" >
+    insert into t_goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="gid != null" >
+        gid,
+      </if>
+      <if test="gname != null" >
+        gname,
+      </if>
+      <if test="gprice != null" >
+        gprice,
+      </if>
+      <if test="gtype != null" >
+        gtype,
+      </if>
+      <if test="gstatus != null" >
+        gstatus,
+      </if>
+      <if test="glib != null" >
+        glib,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="gid != null" >
+        #{gid,jdbcType=INTEGER},
+      </if>
+      <if test="gname != null" >
+        #{gname,jdbcType=VARCHAR},
+      </if>
+      <if test="gprice != null" >
+        #{gprice,jdbcType=REAL},
+      </if>
+      <if test="gtype != null" >
+        #{gtype,jdbcType=INTEGER},
+      </if>
+      <if test="gstatus != null" >
+        #{gstatus,jdbcType=INTEGER},
+      </if>
+      <if test="glib != null" >
+        #{glib,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zking.killcommon.dto.GoodsDTO" >
+    update t_goods
+    <set >
+      <if test="gname != null" >
+        gname = #{gname,jdbcType=VARCHAR},
+      </if>
+      <if test="gprice != null" >
+        gprice = #{gprice,jdbcType=REAL},
+      </if>
+      <if test="gtype != null" >
+        gtype = #{gtype,jdbcType=INTEGER},
+      </if>
+      <if test="gstatus != null" >
+        gstatus = #{gstatus,jdbcType=INTEGER},
+      </if>
+      <if test="glib != null" >
+        glib = #{glib,jdbcType=INTEGER},
+      </if>
+    </set>
+    where gid = #{gid,jdbcType=INTEGER}
+  </update>
+  <update id="changeStatus">
+      update t_goods set gstatus=#{gstatus} where gid=#{gid}
+    </update>
+</mapper>

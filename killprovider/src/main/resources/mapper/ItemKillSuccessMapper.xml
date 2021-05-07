@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zking.killprovider.mapper.ItemKillSuccessMapper" >
+  <resultMap id="BaseResultMap" type="com.zking.killprovider.model.ItemKillSuccess" >
+    <constructor >
+      <idArg column="code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="item_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="kill_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="status" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <resultMap id="dto" type="com.zking.killcommon.dto.ItemKillSuccessDTO">
+    <id column="code" property="code" jdbcType="VARCHAR" javaType="java.lang.String" />
+    <result column="item_id" property="itemId" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="kill_id" property="killId" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" javaType="java.lang.String" />
+    <result column="status" property="status" jdbcType="TINYINT" javaType="java.lang.Byte" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    code, item_id, kill_id, user_id, status, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from item_kill_success
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
+    <select id="selectCount" resultType="java.lang.Integer">
+       select count(*) from item_kill_success
+    where kill_id=#{killId} and user_id=#{userId}
+    and status=0 or status=1
+    </select>
+    <select id="selectById" resultMap="dto">
+      select <include refid="Base_Column_List"/>
+      from item_kill_success where code=#{code}
+
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from item_kill_success
+    where code = #{code,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zking.killprovider.model.ItemKillSuccess" >
+    insert into item_kill_success (code, item_id, kill_id, 
+      user_id, status, create_time
+      )
+    values (#{code,jdbcType=VARCHAR}, #{itemId,jdbcType=INTEGER}, #{killId,jdbcType=INTEGER}, 
+      #{userId,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zking.killcommon.dto.ItemKillSuccessDTO" >
+    insert into item_kill_success
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="killId != null" >
+        kill_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="killId != null" >
+        #{killId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zking.killprovider.model.ItemKillSuccess" >
+    update item_kill_success
+    <set >
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="killId != null" >
+        kill_id = #{killId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zking.killprovider.model.ItemKillSuccess" >
+    update item_kill_success
+    set item_id = #{itemId,jdbcType=INTEGER},
+      kill_id = #{killId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+    <update id="updateStatus">
+        update item_kill_success set status=-1 where code=#{code}
+    </update>
+</mapper>

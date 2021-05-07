@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zking.killprovider.mapper.TreeNodeMapper" >
+  <resultMap id="BaseResultMap" type="com.zking.killprovider.model.TreeNode" >
+    <constructor >
+      <idArg column="tid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="tname" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="tparent" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="url" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="position" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="icon" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <resultMap id="dto" type="com.zking.killcommon.dto.TreeNodeDTO">
+    <id column="tid" property="tid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="tname" property="tname" jdbcType="VARCHAR" javaType="java.lang.String" />
+    <result column="tparent" property="tparent" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="url" property="url" jdbcType="VARCHAR" javaType="java.lang.String" />
+    <result column="position" property="position" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" javaType="java.lang.String" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tid, tname, tparent, url, position, icon
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_systree
+    where tid = #{tid,jdbcType=INTEGER}
+  </select>
+
+    <select id="getParent" resultMap="dto">
+    SELECT <include refid="Base_Column_List"/> FROM t_systree where tparent is null
+
+    </select>
+
+  <select id="getChidren" resultMap="dto">
+    SELECT <include refid="Base_Column_List"/>
+    FROM t_systree  where tparent = #{tid}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_systree
+    where tid = #{tid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zking.killprovider.model.TreeNode" >
+    insert into t_systree (tid, tname, tparent, 
+      url, position, icon
+      )
+    values (#{tid,jdbcType=INTEGER}, #{tname,jdbcType=VARCHAR}, #{tparent,jdbcType=INTEGER}, 
+      #{url,jdbcType=VARCHAR}, #{position,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zking.killprovider.model.TreeNode" >
+    insert into t_systree
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tid != null" >
+        tid,
+      </if>
+      <if test="tname != null" >
+        tname,
+      </if>
+      <if test="tparent != null" >
+        tparent,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="icon != null" >
+        icon,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tid != null" >
+        #{tid,jdbcType=INTEGER},
+      </if>
+      <if test="tname != null" >
+        #{tname,jdbcType=VARCHAR},
+      </if>
+      <if test="tparent != null" >
+        #{tparent,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zking.killprovider.model.TreeNode" >
+    update t_systree
+    <set >
+      <if test="tname != null" >
+        tname = #{tname,jdbcType=VARCHAR},
+      </if>
+      <if test="tparent != null" >
+        tparent = #{tparent,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        position = #{position,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tid = #{tid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zking.killprovider.model.TreeNode" >
+    update t_systree
+    set tname = #{tname,jdbcType=VARCHAR},
+      tparent = #{tparent,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      position = #{position,jdbcType=INTEGER},
+      icon = #{icon,jdbcType=VARCHAR}
+    where tid = #{tid,jdbcType=INTEGER}
+  </update>
+</mapper>

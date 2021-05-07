@@ -1,0 +1,25 @@
+server:
+  port: 7101
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  application:
+    name: killcustomer
+  rabbitmq:
+    host: 192.168.28.128
+    password: admin
+    port: 5672
+    username: admin
+    virtual-host: my_vhost
+  #    listener:
+  #      simple: #单一消费者或者多个消费者
+  #        concurrency: 5 #多个消费者实例数量
+  #        max-concurrency: 15
+  #        prefetch: 10
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/kill?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123

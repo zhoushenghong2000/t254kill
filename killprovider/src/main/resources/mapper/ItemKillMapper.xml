@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zking.killprovider.mapper.ItemKillMapper" >
+  <resultMap id="BaseResultMap" type="com.zking.killprovider.model.ItemKill" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="item_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="totals" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="start_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="end_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="is_active" jdbcType="TINYINT" javaType="java.lang.Byte" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <resultMap id="dto" type="com.zking.killcommon.dto.ItemKillDTO">
+    <id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="item_id" property="itemId" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="totals" property="totals" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    <result column="is_active" property="isActive" jdbcType="TINYINT" javaType="java.lang.Byte" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    <result column="gname" property="gname" jdbcType="VARCHAR" javaType="java.lang.String" />
+    <result column="gprice" property="gprice" jdbcType="FLOAT" javaType="java.lang.Float" />
+    <result column="zk" property="zk" jdbcType="FLOAT" javaType="java.lang.Float" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, item_id, totals, start_time, end_time, is_active, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from item_kill
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+    <select id="getAllKill" resultMap="dto">
+     SELECT ik.id,ik.item_id,g.gname,g.gprice,ik.totals,ik.start_time,ik.end_time,
+ik.is_active ,ik.create_time FROM item_kill ik ,t_goods g where ik.item_id=g.gid and is_active=1
+<if test="gname != null" >
+   and g.gname like concat('%',#{gname},'%')
+</if>
+    </select>
+  <select id="getForKill" resultMap="dto">
+    SELECT g.gprice,ik.id,g.gname,g.gprice*0.7 zk,
+    ik.start_time,ik.end_time,ik.totals,
+    ik.is_active,ik.create_time,
+(case  when now() between ik.start_time and ik.end_time and ik.totals>0  then 1 else 0 end) cankill
+   FROM item_kill ik,t_goods g where ik.item_id=g.gid
+  </select>
+  <select id="selectById" resultMap="dto">
+   SELECT <include refid="Base_Column_List"/> , (case when now() between start_time and end_time
+and  totals>0 then 1 else 0 end) cankill FROM item_kill
+where id=#{killlId}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from item_kill
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zking.killcommon.dto.ItemKillsaveDTO" >
+    insert into item_kill (item_id, totals,
+    start_time, end_time)
+    values
+    <foreach collection="goods" item="i" separator=",">
+      (#{i.gid,jdbcType=INTEGER},
+      #{i.glib,jdbcType=INTEGER},
+      #{startTime,jdbcType=TIMESTAMP},
+      #{endTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.zking.killprovider.model.ItemKill" >
+    insert into item_kill
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="totals != null" >
+        total,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="isActive != null" >
+        is_active,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="totals != null" >
+        #{total,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isActive != null" >
+        #{isActive,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zking.killprovider.model.ItemKill" >
+    update item_kill
+    <set >
+      <if test="itemId != null" >
+        item_id = #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="totals != null" >
+        total = #{total,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isActive != null" >
+        is_active = #{isActive,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zking.killprovider.model.ItemKill" >
+    update item_kill
+    set item_id = #{itemId,jdbcType=INTEGER},
+      totals = #{totals,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      is_active = #{isActive,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
